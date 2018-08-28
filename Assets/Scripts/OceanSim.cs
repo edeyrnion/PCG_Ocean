@@ -7,25 +7,22 @@ public class OceanSim : MonoBehaviour
     [SerializeField] private int _gridSize = 100;
     [SerializeField] private float _cellSize = 10;
     [SerializeField] private PerlinNoiseLayer _perlinNoiseLayer;
+    [SerializeField] private Material _material;
 
     private Mesh _mesh;
+    private Vector3[] _vertices;
 
     private void Awake()
     {
-        _mesh = new PlaneGenerator().Generate(_gridSize, _cellSize);
+        _mesh = PlaneGenerator.Generate(_gridSize, _cellSize, "OceanMesh");
         _mesh.MarkDynamic();
-
-        GetComponent<MeshFilter>().mesh = _mesh;
+        _vertices = _mesh.vertices;
     }
 
     private void Update()
     {
-        var vertices = _mesh.vertices;
-
-        Vector3[] vertices = new Vector3[_mesh.vertices.Length];
-
         var jobHandle = new JobHandle();
-        var vertexArray = new NativeArray<Vector3>(vertices, Allocator.TempJob);
+        var vertexArray = new NativeArray<Vector3>(_vertices, Allocator.TempJob);
 
         var Job = new SetPerlinNoiseJob
         {
@@ -35,14 +32,15 @@ public class OceanSim : MonoBehaviour
         };
 
         jobHandle = Job.Schedule(vertexArray.Length, 250);
-
         jobHandle.Complete();
 
-        vertexArray.CopyTo(vertices);
+        vertexArray.CopyTo(_vertices);
         vertexArray.Dispose();
 
-        _mesh.vertices = vertices;
+        _mesh.vertices = _vertices;
 
         _mesh.RecalculateNormals();
+
+        Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
     }
 }

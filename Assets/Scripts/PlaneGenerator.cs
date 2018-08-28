@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class PlaneGenerator
+public static class PlaneGenerator
 {
-    public Mesh Generate(int gridSize, float cellSize)
+    public static Mesh Generate(int gridSize, float cellSize, string name ="NewMesh")
     {
         int verticesCount = (gridSize + 1) * (gridSize + 1);
         int trianglesCount = gridSize * gridSize * 2;
@@ -44,11 +44,13 @@ public class PlaneGenerator
 
         Mesh m = new Mesh
         {
-            name = "OceanMesh",
+            name = name,
             vertices = newVertices,
             uv = newUV,
             triangles = newTriangles
         };
+
+        m.RecalculateNormals();
 
         return m;
     }

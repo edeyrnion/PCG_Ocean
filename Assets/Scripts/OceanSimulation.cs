@@ -14,7 +14,7 @@ public class OceanSimulation : MonoBehaviour
 
     private void Awake()
     {
-        _mesh = new PlaneGenerator().Generate(_gridSize, _cellSize);
+        _mesh = PlaneGenerator.Generate(_gridSize, _cellSize);
         _mesh.MarkDynamic();
 
         GetComponent<MeshFilter>().mesh = _mesh;
