@@ -303,7 +303,7 @@ MonoBehaviour:
     Scale: 0.004
     Speed: 0.1
     Height: 60
-  material: {fileID: 2100000, guid: 9197d382c66a68543a538d43b7a3f97d, type: 2}
+  _material: {fileID: 2100000, guid: 9197d382c66a68543a538d43b7a3f97d, type: 2}
 --- !u!4 &879016129
 Transform:
   m_ObjectHideFlags: 0
